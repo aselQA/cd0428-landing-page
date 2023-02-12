@@ -26,17 +26,9 @@ const sections = document.querySelectorAll("section");
 
 /**
  * End Global Variables
- * Start Helper Functions
- *
  */
 
-/**
- * End Helper Functions
- * Begin Main Functions
- *
- */
-
-// build the nav
+// building the navigation menu
 sections.forEach((section) => {
   const navList = document.createElement("li");
   navigation.appendChild(navList);
@@ -51,20 +43,40 @@ sections.forEach((section) => {
   navList.appendChild(navA);
 });
 
-// Add class 'active' to section when near top of viewport
+//set variable all <a> links in navigation bar
+const menuLink = document.querySelectorAll(".menu__link");
+// Add class = 'active' in navigation link
+menuLink.forEach((link) => {
+  link.addEventListener("click", function () {
+    // (1) remove all active class
+    removeActiveClassInNavLink();
+    // (2) add a active class
+    if (link.className !== "active") {
+      link.classList.add("active");
+    }
+  });
+});
 
-const sectionInViewPort = (section) => {
+// function remove active class in navigation link
+function removeActiveClassInNavLink() {
+  for (let i = 0; i < menuLink.length; i++) {
+    menuLink[i].classList.remove("active");
+  }
+}
+
+// verify that section when near top of viewport
+const isInViewPort = (section) => {
   return Math.floor(section.getBoundingClientRect().top);
 };
 
-// remove the active class
+// remove the active class in section
 const removeActiveClass = (section) => {
   section.classList.remove("your-active-class");
   section.style.cssText =
     "background-color: linear-gradient(0deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.2) 100%)";
 };
 
-// adding the active class
+// adding the active class in section
 const addActiveClass = (isTrue, section) => {
   if (isTrue) {
     section.classList.add("your-active-class");
@@ -72,58 +84,32 @@ const addActiveClass = (isTrue, section) => {
   }
 };
 
-//the function  add class 'active' to section
+//the function  add or remove class 'active' to section in viewport
 const activeSection = () => {
   sections.forEach((section) => {
-    const elementInView = sectionInViewPort(section);
+    const elementInView = isInViewPort(section);
 
-    inviewport = () => elementInView < 100 && elementInView >= -100;
+    inView = () => elementInView < 100 && elementInView >= -100;
 
     removeActiveClass(section);
-    addActiveClass(inviewport(), section);
+    addActiveClass(inView(), section);
   });
 };
-
 window.addEventListener("scroll", activeSection);
 
-// Scroll to anchor ID using scrollTO event
-const scrollingSection = () => {
-  const links = document.querySelectorAll(".menu__link");
-  links.forEach((link) => {
-    link.addEventListener("click", () => {
-      for (i = 0; i < sections; i++) {
-        sections[i].addEventListener("click", (e) => {
-          e.preventDefault();
-          link.scrollIntoView({
-            behavior: "smooth",
-          });
-        });
-      }
-    });
+// move smoothly to each section when clik on navigation bar
+for (let i = 0; i < menuLink.length; i++) {
+  menuLink[i].addEventListener("click", function () {
+    const eachSection = document.getElementById("section" + (i + 1));
+    console.log(eachSection);
+    if (isInViewPort(eachSection)) {
+      eachSection.scrollIntoView({ behavior: "smooth" });
+    }
   });
-};
-scrollingSection();
-
-// for (const section of sections) {
-//   const links = document.querySelectorAll(".menu__link");
-//   for (let i = 0; i < links; i++) {
-//     links[i].addEventListener("click", (e) => {
-//       e.preventDefault();
-//       section.scrollIntoView({
-//         behavior: "smooth",
-//       });
-//     });
-//   }
-// }
+}
 
 /**
  * End Main Functions
  * Begin Events
  *
  */
-
-// Build menu
-
-// Scroll to section on link click
-
-// Set sections as active
